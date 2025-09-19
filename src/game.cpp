@@ -50,7 +50,7 @@ void Game::UpdatePipeQueue() {
   if (pipes.back()->posX <= WINDOW_WIDTH - 200) {
     pipes.push_back(new Pipe());
   }
-  while (pipes.back()->posX < -20) {
+  while (pipes.back()->posX < -PIPE_WIDTH) {
     pipes.pop_back();
   }
   for (auto &pipe : pipes) {
@@ -66,6 +66,8 @@ void Game::HandleInput() {
 
 // Check collision
 bool Game::IsCollide() {
+  if (bird->posY <= 0 || bird->posY + bird->HEIGHT >= WINDOW_HEIGHT)
+    return 1;
   for (const auto &pipe : pipes) {
     Vector2 posBottom = {(float)pipe->posX, (float)(pipe->posY)};
     Vector2 posTop = {(float)pipe->posX, (float)(-pipe->spaceWidth)};
@@ -86,6 +88,8 @@ void Game::HandleCollision() {
     currentState = OVER;
   }
 }
+
+void Game::UpdateScore() {}
 
 void Game::Run() {
   while (!WindowShouldClose()) {
@@ -114,6 +118,11 @@ void Game::Run() {
       DrawTextureRec(pipeTexture, srcTop, posTop, WHITE);
     }
     // DrawRectangle(bird.posX, bird.posY, 10, 10, RED);
+
+    // Draw game over screen
+    if (currentState == OVER) {
+      DrawText("Game Over!", 100, 600, 75, RED);
+    }
 
     EndDrawing();
   }

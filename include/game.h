@@ -24,6 +24,7 @@ public:
   double delta, timePassed = 0;
   double birdVelocity = 0;
   int currentState;
+  int score = 0;
 
 private:
   void HandleInput();
@@ -31,4 +32,5 @@ private:
   void UpdatePipeQueue();
   bool IsCollide();
   void HandleCollision();
+  void UpdateScore();
 };
