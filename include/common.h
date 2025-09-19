@@ -7,6 +7,6 @@ const int WINDOW_WIDTH = 600;
 const double GRAVITY = 0.2;
 const double ACCEL = 8;
 const double PIPE_WIDTH = 52 * 1.5, PIPE_HEIGHT = 320 * 1.5;
-const double PIPE_VELOCITY = 7;
+const double PIPE_VELOCITY = 5;
 
 double randomDouble(double a, double b, std::mt19937 &gen);

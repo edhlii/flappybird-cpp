@@ -60,7 +60,7 @@ void Game::UpdatePipeQueue() {
 
 void Game::HandleInput() {
   if (IsKeyPressed(KEY_SPACE)) {
-    bird->velocity = -8;
+    bird->velocity = -5;
   }
 }
 
