@@ -4,6 +4,7 @@
 #include "pipe.h"
 #include "raylib.h"
 #include "resource_dir.h"
+#include <string>
 #include <vector>
 
 class Game {
@@ -15,22 +16,22 @@ public:
   Game();
   ~Game();
   void Run();
-  void loadTexture();
   Texture birdTexture;
   Texture pipeTexture;
   Texture backgroundTexture;
   Bird *bird;
   std::vector<Pipe *> pipes;
   double delta, timePassed = 0;
-  double birdVelocity = 0;
   int currentState;
   int score = 0;
 
 private:
+  void LoadTexture();
+  void Initialize();
   void HandleInput();
   void UpdateBirdPosition();
   void UpdatePipeQueue();
   bool IsCollide();
   void HandleCollision();
-  void UpdateScore();
+  void Render();
 };

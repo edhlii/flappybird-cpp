@@ -1,7 +1,7 @@
 #pragma once
 #include <random>
 
-enum GameState { RUN, OVER };
+enum GameState { RUN, OVER, PAUSE, MENU };
 const int WINDOW_HEIGHT = 800;
 const int WINDOW_WIDTH = 600;
 const double GRAVITY = 0.2;
