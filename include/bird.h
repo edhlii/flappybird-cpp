@@ -3,13 +3,13 @@
 #include "raylib.h"
 
 class Bird {
- private:
+private:
   double posX;
   double posY;
   double velocity = 0;
   bool dead = 0;
 
- public:
+public:
   Bird();
   void reset();
   double getPosX();
@@ -18,6 +18,7 @@ class Bird {
   bool isDead();
   void setPosX(double posX);
   void setPosY(double posY);
-  double setVelocity(double velocity);
+  void setVelocity(double velocity);
   void setDead(bool dead);
+  void updatePosition();
 };

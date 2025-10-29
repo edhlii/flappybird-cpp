@@ -8,7 +8,6 @@
 
 class Agent {
  private:
-  Bird* bird;
   unsigned fitness;
   unsigned short score;
   std::uniform_int_distribution<int> mutation_distribution;
@@ -18,6 +17,7 @@ class Agent {
   std::vector<std::vector<std::vector<float>>> weights;
 
  public:
+  Bird* bird;
   Agent();
 
   bool do_ai_stuff(std::vector<Pipe*> pipes);

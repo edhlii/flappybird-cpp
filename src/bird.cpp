@@ -16,5 +16,11 @@ bool Bird::isDead() { return dead; }
 
 void Bird::setPosX(double posX) { this->posX = posX; }
 void Bird::setPosY(double posY) { this->posY = posY; }
-double Bird::setVelocity(double velocity) { this->velocity = velocity; }
+void Bird::setVelocity(double velocity) { this->velocity = velocity; }
 void Bird::setDead(bool dead) { this->dead = dead; }
+
+void Bird::updatePosition() {
+  velocity += GRAVITY;
+  posY += velocity;
+  return;
+}

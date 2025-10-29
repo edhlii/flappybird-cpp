@@ -29,9 +29,9 @@ bool Agent::do_ai_stuff(std::vector<Pipe*> pipes) {
 
   // I heard that smart people use matrices in a neural network.
   // But I'm not one of them.
-  for (unsigned char a = 0; a < neural_network.size() - 1; a++) {
-    for (unsigned char b = 0; b < neural_network[1 + a].size(); b++) {
-      for (unsigned char c = 0; c < neural_network[a].size(); c++) {
+  for (unsigned int a = 0; a < neural_network.size() - 1; a++) {
+    for (unsigned int b = 0; b < neural_network[1 + a].size(); b++) {
+      for (unsigned int c = 0; c < neural_network[a].size(); c++) {
         neural_network[1 + a][b] += neural_network[a][c] * weights[a][c][b];
       }
 

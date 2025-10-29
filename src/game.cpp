@@ -13,43 +13,41 @@ void Game::Initialize() {
   pipeManager.reset();
   currentState = PAUSE;
   bird = new Bird();
-  Renderer::LoadTexture();
+  Renderer::LoadAllTexture();
   score = 0;
   std::cout << "Initialized successfully" << std::endl;
 }
 
 Game::~Game() {
-  UnloadTexture(backgroundTexture);
-  UnloadTexture(birdTexture);
-  UnloadTexture(pipeTexture);
+  Renderer::UnloadAllTexture();
   delete bird;
   CloseWindow();
 }
 
-void Game::UpdateBirdPosition() {
-  bird->setVelocity(bird->getVelocity() + GRAVITY);
-  bird->setPosY(bird->getPosY() + bird->getVelocity());
-  return;
-}
+void Game::UpdateBirdPosition() { bird->updatePosition(); }
 
 void Game::HandleInput() {
+  // if (IsKeyPressed(KEY_ENTER)) {
+  //   std::cout << "Enter" << std::endl;
+  //   currentState = RUN;
+  // }
   if (IsKeyPressed(KEY_SPACE) && currentState == RUN) {
-    bird->setVelocity(-JUMP_FORCE);  // Lực âm để bay lên
+    bird->setVelocity(-JUMP_FORCE); // Lực âm để bay lên
   }
   if (IsKeyPressed(KEY_ENTER)) {
     switch (currentState) {
-      case PAUSE:
-        currentState = RUN;
-        break;
-      case RUN:
-        currentState = PAUSE;
-        break;
-      case OVER:
-        currentState = PAUSE;
-        Initialize();
-        break;
-      default:
-        break;
+    case PAUSE:
+      currentState = RUN;
+      break;
+    case RUN:
+      currentState = PAUSE;
+      break;
+    case OVER:
+      currentState = PAUSE;
+      Initialize();
+      break;
+    default:
+      break;
     }
   }
 }
@@ -57,12 +55,13 @@ void Game::HandleInput() {
 // Check collision
 bool Game::IsCollide() {
   // Ground, roof collide
-  if (bird->getPosY() <= 0 || bird->getPosY() + BIRD_HEIGHT >= WINDOW_HEIGHT)
+  if (bird->getPosY() <= 0 ||
+      bird->getPosY() + BIRD_HEIGHT >= WINDOW_HEIGHT - GROUND_HEIGHT)
     return 1;
 
   // Pipes collide
-  std::vector<Pipe*> pipes = pipeManager.getPipeList();
-  for (const auto& pipe : pipes) {
+  std::vector<Pipe *> pipes = pipeManager.getPipeList();
+  for (const auto &pipe : pipes) {
     Vector2 posBottom = {(float)pipe->getPosXBot(),
                          (float)(pipe->getPosYBot())};
     Vector2 posTop = {(float)pipe->getPosXTop(), (float)(pipe->getPosYTop())};
@@ -113,7 +112,7 @@ void Game::Run() {
     }
 
     BeginDrawing();
-    Renderer::Render(bird, pipeManager, currentState, score);
+    Renderer::RenderPlayer(bird, pipeManager, currentState, score);
     EndDrawing();
   }
 }

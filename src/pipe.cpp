@@ -5,16 +5,17 @@
 Pipe::Pipe() {
   std::random_device rd;
   std::mt19937 gen(rd());
-  spaceWidth = randomDouble(130, 300, gen);
+  spaceWidth = randomDouble(200, 300, gen);
 
-  posYBot = randomDouble(spaceWidth, WINDOW_HEIGHT, gen);
+  posYBot = randomDouble(MIN_PIPE_Y, MAX_PIPE_Y, gen);
   posXBot = posXTop = WINDOW_WIDTH + PIPE_WIDTH;
-  posYTop = posYBot - spaceWidth - PIPE_HEIGHT;
+  posYTop = posYBot - PIPE_GAP - PIPE_HEIGHT;
 
   // Check pipe out of window
   if (posYBot + PIPE_HEIGHT <= WINDOW_HEIGHT)
     posYBot = WINDOW_HEIGHT - PIPE_HEIGHT;
-  if (posYTop >= 0) posYTop = 0;
+  if (posYTop >= 0)
+    posYTop = 0;
 }
 
 double Pipe::getPosXBot() { return posXBot; }
@@ -32,7 +33,7 @@ void Pipe::setSpaceWidth(double spaceWidth) { this->spaceWidth = spaceWidth; }
 void Pipe::setDirection(int direction) { this->direction = direction; }
 
 void Pipe::updatePosition() {
-  posYBot += direction * PIPE_Y_VELOCITY;
+  // posYBot += direction * PIPE_Y_VELOCITY;
 
   if (posYBot + PIPE_HEIGHT <= WINDOW_HEIGHT) {
     posYBot = WINDOW_HEIGHT - PIPE_HEIGHT;
