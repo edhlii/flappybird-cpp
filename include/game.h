@@ -8,7 +8,7 @@
 #include <vector>
 
 class Game {
-public:
+private:
   const int WINDOW_HEIGHT = 800;
   const int WINDOW_WIDTH = 600;
   const double GRAVITY = 0.2;
@@ -25,7 +25,7 @@ public:
   int currentState;
   int score = 0;
 
-private:
+public:
   void LoadTexture();
   void Initialize();
   void HandleInput();
