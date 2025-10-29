@@ -8,5 +8,10 @@
 		"**/*.o": true,
 		"**/*.exe": true,
 	},
-	"makefile.configureOnOpen": true
+	"makefile.configureOnOpen": true,
+	"files.associations": {
+		"random": "cpp",
+		"algorithm": "cpp",
+		"memory": "cpp"
+	}
 }
