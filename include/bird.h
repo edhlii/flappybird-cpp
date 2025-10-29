@@ -11,6 +11,7 @@ private:
 
 public:
   Bird();
+  void flap();
   void reset();
   double getPosX();
   double getPosY();

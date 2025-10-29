@@ -2,5 +2,6 @@
 
 int main() {
   Game *game = new Game();
-  game->Run();
+  // game->RunPlayer();
+  game->RunAgent();
 }

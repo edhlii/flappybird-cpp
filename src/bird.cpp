@@ -24,3 +24,5 @@ void Bird::updatePosition() {
   posY += velocity;
   return;
 }
+
+void Bird::flap() { velocity = -JUMP_FORCE; }

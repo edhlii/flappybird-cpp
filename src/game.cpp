@@ -13,6 +13,10 @@ void Game::Initialize() {
   pipeManager.reset();
   currentState = PAUSE;
   bird = new Bird();
+
+  agent->reset();
+  agent = new Agent(bird, 0);
+
   Renderer::LoadAllTexture();
   score = 0;
   std::cout << "Initialized successfully" << std::endl;
@@ -24,15 +28,13 @@ Game::~Game() {
   CloseWindow();
 }
 
-void Game::UpdateBirdPosition() { bird->updatePosition(); }
-
 void Game::HandleInput() {
   // if (IsKeyPressed(KEY_ENTER)) {
   //   std::cout << "Enter" << std::endl;
   //   currentState = RUN;
   // }
   if (IsKeyPressed(KEY_SPACE) && currentState == RUN) {
-    bird->setVelocity(-JUMP_FORCE); // Lực âm để bay lên
+    bird->flap();
   }
   if (IsKeyPressed(KEY_ENTER)) {
     switch (currentState) {
@@ -97,22 +99,45 @@ void Game::HandleCollision() {
   }
 }
 
-void Game::Run() {
+void Game::RunPlayer() {
   while (!WindowShouldClose()) {
     // Manage game state
 
     if (currentState == RUN) {
       HandleInput();
-      UpdateBirdPosition();
+      bird->updatePosition();
       pipeManager.updatePipeQueue();
       pipeManager.updatePipePosition();
       HandleCollision();
+      // agent.play(pipeManager.getPipeList());
     } else {
       HandleInput();
     }
 
     BeginDrawing();
     Renderer::RenderPlayer(bird, pipeManager, currentState, score);
+    // Renderer::RenderAI(&agent, pipeManager, currentState, score);
+    EndDrawing();
+  }
+}
+
+void Game::RunAgent() {
+  while (!WindowShouldClose()) {
+    // Manage game state
+
+    if (currentState == RUN) {
+      HandleInput();
+      bird->updatePosition();
+      pipeManager.updatePipeQueue();
+      pipeManager.updatePipePosition();
+      HandleCollision();
+      agent->playType0(pipeManager.getPipeList());
+    } else {
+      HandleInput();
+    }
+
+    BeginDrawing();
+    Renderer::RenderAI(agent, pipeManager, currentState, score);
     EndDrawing();
   }
 }
