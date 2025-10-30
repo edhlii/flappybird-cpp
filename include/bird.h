@@ -3,9 +3,21 @@
 #include "raylib.h"
 
 class Bird {
-public:
+ private:
   double posX;
   double posY;
   double velocity = 0;
-  const int WIDTH = 40, HEIGHT = 35;
+  bool dead = 0;
+
+ public:
+  Bird();
+  void reset();
+  double getPosX();
+  double getPosY();
+  double getVelocity();
+  bool isDead();
+  void setPosX(double posX);
+  void setPosY(double posY);
+  double setVelocity(double velocity);
+  void setDead(bool dead);
 };
