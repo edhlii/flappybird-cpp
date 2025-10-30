@@ -1,4 +1,6 @@
 #pragma once
+#include <chrono>
+#include <random>
 #include <string>
 #include <vector>
 
@@ -18,7 +20,8 @@ private:
   Texture backgroundTexture;
   Bird *bird;
   PipeManager pipeManager;
-  Agent *agent;
+  Agent *agent0;
+  std::vector<Agent *> agents;
   double delta, timePassed = 0;
   int currentState;
   int score = 0;
@@ -27,9 +30,10 @@ public:
   Game();
   ~Game();
   void RunPlayer();
-  void RunAgent();
+  void RunAgent0();
+  void RunAgent1();
   void Initialize();
   void HandleInput();
-  bool IsCollide();
-  void HandleCollision();
+  bool IsCollide(Bird *bird);
+  void HandleCollision(Bird *bird);
 };

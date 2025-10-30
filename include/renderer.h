@@ -3,12 +3,12 @@
 #include <iostream>
 #include <vector>
 
+#include "agent.h"
 #include "bird.h"
 #include "common.h"
 #include "pipe.h"
 #include "pipeManager.h"
 #include "raylib.h"
-#include "agent.h"
 #include "resource_dir.h"
 
 class Renderer {
@@ -24,8 +24,11 @@ public:
   static void RenderPipes(PipeManager &pipeManager);
   static void RenderBird(Bird *bird);
   static void RenderGround();
-  static void RenderPlayer(Bird *bird, PipeManager &pipeManager, int currentState,
-                         int score);
-  static void RenderAI(Agent *agent, PipeManager &pipeManager, int currentState,
-                         int score);
+  static void RenderPlayer(Bird *bird, PipeManager &pipeManager,
+                           int currentState, int score);
+  static void RenderAgent0(Agent *agent, PipeManager &pipeManager,
+                           int currentState, int score);
+  static void RenderAgent1(std::vector<Agent *> agents,
+                           PipeManager &pipeManager, int currentState,
+                           int score);
 };

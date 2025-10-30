@@ -14,8 +14,16 @@ void Game::Initialize() {
   currentState = PAUSE;
   bird = new Bird();
 
-  agent->reset();
-  agent = new Agent(bird, 0);
+  agent0->reset();
+  agent0 = new Agent(new Bird(), 0);
+
+  std::mt19937_64 random_engine(
+      std::chrono::system_clock::now().time_since_epoch().count());
+  agents.resize(1);
+  for (int i = 0; i < 1; ++i) {
+    agents[i] = new Agent(new Bird(), 1);
+    agents[i]->generateWeights(random_engine);
+  }
 
   Renderer::LoadAllTexture();
   score = 0;
@@ -55,7 +63,7 @@ void Game::HandleInput() {
 }
 
 // Check collision
-bool Game::IsCollide() {
+bool Game::IsCollide(Bird *bird) {
   // Ground, roof collide
   if (bird->getPosY() <= 0 ||
       bird->getPosY() + BIRD_HEIGHT >= WINDOW_HEIGHT - GROUND_HEIGHT)
@@ -92,8 +100,8 @@ bool Game::IsCollide() {
   return 0;
 }
 
-void Game::HandleCollision() {
-  bird->setDead(IsCollide());
+void Game::HandleCollision(Bird *bird) {
+  bird->setDead(IsCollide(bird));
   if (bird->isDead()) {
     currentState = OVER;
   }
@@ -108,7 +116,7 @@ void Game::RunPlayer() {
       bird->updatePosition();
       pipeManager.updatePipeQueue();
       pipeManager.updatePipePosition();
-      HandleCollision();
+      HandleCollision(bird);
       // agent.play(pipeManager.getPipeList());
     } else {
       HandleInput();
@@ -121,23 +129,48 @@ void Game::RunPlayer() {
   }
 }
 
-void Game::RunAgent() {
+void Game::RunAgent0() {
   while (!WindowShouldClose()) {
     // Manage game state
     std::vector<Pipe *> pipes = pipeManager.getPipeList();
     if (currentState == RUN) {
       HandleInput();
-      bird->updatePosition();
+      agent0->bird->updatePosition();
       pipeManager.updatePipeQueue();
       pipeManager.updatePipePosition();
-      HandleCollision();
-      agent->playType0(pipes);
+      HandleCollision(agent0->bird);
+      agent0->playType0(pipes);
     } else {
       HandleInput();
     }
 
     BeginDrawing();
-    Renderer::RenderAI(agent, pipeManager, currentState, score);
+    Renderer::RenderAgent0(agent0, pipeManager, currentState, score);
+    EndDrawing();
+  }
+}
+
+void Game::RunAgent1() {
+
+  while (!WindowShouldClose()) {
+    // Manage game state
+    std::vector<Pipe *> pipes = pipeManager.getPipeList();
+    if (currentState == RUN) {
+      HandleInput();
+      for (Agent *agent : agents) {
+        agent->bird->updatePosition();
+        agent->playType1(pipes);
+        HandleCollision(agent->bird);
+      }
+      pipeManager.updatePipeQueue();
+      pipeManager.updatePipePosition();
+
+    } else {
+      HandleInput();
+    }
+
+    BeginDrawing();
+    Renderer::RenderAgent1(agents, pipeManager, currentState, score);
     EndDrawing();
   }
 }

@@ -3,5 +3,6 @@
 int main() {
   Game *game = new Game();
   // game->RunPlayer();
-  game->RunAgent();
+  game->RunAgent0();
+  // game->RunAgent1();
 }

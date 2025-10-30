@@ -93,8 +93,8 @@ void Renderer::RenderPlayer(Bird *bird, PipeManager &pipeManager,
   DrawLine(bird->getPosX(), bird->getPosY(), bird->getPosX(), diff, red);
 }
 
-void Renderer::RenderAI(Agent *agent, PipeManager &pipeManager,
-                        int currentState, int score) {
+void Renderer::RenderAgent0(Agent *agent, PipeManager &pipeManager,
+                            int currentState, int score) {
   Bird *bird = agent->bird;
   ClearBackground(BLUE);
   DrawTexture(backgroundTexture, 0, 0, WHITE);
@@ -124,4 +124,44 @@ void Renderer::RenderAI(Agent *agent, PipeManager &pipeManager,
 
   Color red = {255, 0, 0, 100};
   DrawLine(bird->getPosX(), bird->getPosY(), bird->getPosX(), diff, red);
+}
+
+void Renderer::RenderAgent1(std::vector<Agent *> agents,
+                            PipeManager &pipeManager, int currentState,
+                            int score) {
+  ClearBackground(BLUE);
+  DrawTexture(backgroundTexture, 0, 0, WHITE);
+
+  for (Agent *agent : agents) {
+    RenderBird(agent->bird);
+  }
+
+  RenderPipes(pipeManager);
+  RenderGround();
+
+  // Draw score
+  std::string scoreText = "Score: " + std::to_string(score);
+  DrawText(scoreText.c_str(), 0, 0, 40, RED);
+  if (currentState == PAUSE) {
+    DrawText("Press Enter to fly!", 100, 600, 40, BLUE);
+  } else if (currentState == OVER) {
+    DrawText("Game Over!", 100, 600, 75, RED);
+    DrawText("Press Enter to try again!", 100, 700, 30, RED);
+  }
+
+  double diff = 0;
+  std::vector<Pipe *> pipes = pipeManager.getPipeList();
+  for (Pipe *pipe : pipes) {
+    // I made the width of the pipes twice the size of the bird.
+    for (Agent *agent : agents) {
+      Bird* bird = agent->bird;
+      if (bird->getPosX() < pipe->getPosXBot() + PIPE_WIDTH * 0.65) {
+        diff = (pipe->getPosYBot() + pipe->getPosYTop() + PIPE_HEIGHT) / 2;
+        break;
+      }
+    }
+  }
+
+  Color red = {255, 0, 0, 100};
+  // DrawLine(bird->getPosX(), bird->getPosY(), bird->getPosX(), diff, red);
 }
