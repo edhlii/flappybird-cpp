@@ -12,10 +12,10 @@ Pipe::Pipe() {
   posYTop = posYBot - PIPE_GAP - PIPE_HEIGHT;
 
   // Check pipe out of window
-  if (posYBot + PIPE_HEIGHT <= WINDOW_HEIGHT)
-    posYBot = WINDOW_HEIGHT - PIPE_HEIGHT;
-  if (posYTop >= 0)
-    posYTop = 0;
+  // if (posYBot + PIPE_HEIGHT <= WINDOW_HEIGHT)
+  //   posYBot = WINDOW_HEIGHT - PIPE_HEIGHT;
+  // if (posYTop >= 0)
+  //   posYTop = 0;
 }
 
 double Pipe::getPosXBot() { return posXBot; }

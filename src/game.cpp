@@ -124,14 +124,14 @@ void Game::RunPlayer() {
 void Game::RunAgent() {
   while (!WindowShouldClose()) {
     // Manage game state
-
+    std::vector<Pipe *> pipes = pipeManager.getPipeList();
     if (currentState == RUN) {
       HandleInput();
       bird->updatePosition();
       pipeManager.updatePipeQueue();
       pipeManager.updatePipePosition();
       HandleCollision();
-      agent->playType0(pipeManager.getPipeList());
+      agent->playType0(pipes);
     } else {
       HandleInput();
     }

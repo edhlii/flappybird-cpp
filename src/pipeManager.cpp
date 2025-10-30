@@ -19,7 +19,7 @@ void PipeManager::updatePipeQueue() {
   // }
 
   while (!pipes.empty() && pipes.front()->getPosXBot() < -PIPE_WIDTH) {
-    delete pipes.front();
+    // Potential memory leak
     pipes.erase(pipes.begin());
   }
 }
