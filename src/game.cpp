@@ -14,13 +14,14 @@ void Game::Initialize() {
   currentState = PAUSE;
   bird = new Bird();
 
-  agent0->reset();
   agent0 = new Agent(new Bird(), 0);
+  agent0->reset();
 
   std::mt19937_64 random_engine(
       std::chrono::system_clock::now().time_since_epoch().count());
-  agents.resize(1);
-  for (int i = 0; i < 1; ++i) {
+
+  agents.resize(POPULATION_SIZE);
+  for (int i = 0; i < POPULATION_SIZE; ++i) {
     agents[i] = new Agent(new Bird(), 1);
     agents[i]->generateWeights(random_engine);
   }
@@ -28,6 +29,30 @@ void Game::Initialize() {
   Renderer::LoadAllTexture();
   score = 0;
   std::cout << "Initialized successfully" << std::endl;
+}
+
+void Game::NewGeneration() {
+  pipeManager.reset();
+  currentState = RUN;
+  score = 0;
+
+  for (Agent *agent : agents) {
+    agent->bird->reset();
+  }
+
+  std::mt19937_64 random_engine(
+      std::chrono::system_clock::now().time_since_epoch().count());
+
+  std::sort(agents.begin(), agents.end(), [](Agent *a, Agent *b) {
+    return a->getFitness() > b->getFitness();
+  });
+  Agent *adam, *eva;
+  adam = agents[0];
+  eva = agents[1];
+  agents[2]->crossover(random_engine, adam->getWeights(), eva->getWeights());
+  for (int i = 3; i < POPULATION_SIZE; ++i) {
+    agents[i]->generateWeights(random_engine);
+  }
 }
 
 Game::~Game() {
@@ -108,6 +133,7 @@ void Game::HandleCollision(Bird *bird) {
 }
 
 void Game::RunPlayer() {
+  aiType = -1;
   while (!WindowShouldClose()) {
     // Manage game state
 
@@ -130,6 +156,7 @@ void Game::RunPlayer() {
 }
 
 void Game::RunAgent0() {
+  aiType = 0;
   while (!WindowShouldClose()) {
     // Manage game state
     std::vector<Pipe *> pipes = pipeManager.getPipeList();
@@ -151,19 +178,34 @@ void Game::RunAgent0() {
 }
 
 void Game::RunAgent1() {
-
+  aiType = 1;
   while (!WindowShouldClose()) {
     // Manage game state
     std::vector<Pipe *> pipes = pipeManager.getPipeList();
     if (currentState == RUN) {
-      HandleInput();
+      // HandleInput();
+      bool isDead = 1;
+
       for (Agent *agent : agents) {
+        if (agent->bird->isDead())
+          continue;
+        isDead = 0;
         agent->bird->updatePosition();
         agent->playType1(pipes);
-        HandleCollision(agent->bird);
+        if (IsCollide(agent->bird)) {
+          agent->bird->setDead(true);
+        } else {
+          agent->addFitness(3.6);
+        }
+        // HandleCollision(agent->bird);
       }
+
       pipeManager.updatePipeQueue();
       pipeManager.updatePipePosition();
+
+      if (isDead) {
+        NewGeneration();
+      }
 
     } else {
       HandleInput();

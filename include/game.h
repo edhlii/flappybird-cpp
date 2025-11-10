@@ -3,6 +3,7 @@
 #include <random>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include "agent.h"
 #include "bird.h"
@@ -24,6 +25,7 @@ private:
   std::vector<Agent *> agents;
   double delta, timePassed = 0;
   int currentState;
+  int aiType = -1;
   int score = 0;
 
 public:
@@ -36,4 +38,5 @@ public:
   void HandleInput();
   bool IsCollide(Bird *bird);
   void HandleCollision(Bird *bird);
+  void NewGeneration();
 };

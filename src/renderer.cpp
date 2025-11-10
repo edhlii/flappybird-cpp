@@ -133,6 +133,8 @@ void Renderer::RenderAgent1(std::vector<Agent *> agents,
   DrawTexture(backgroundTexture, 0, 0, WHITE);
 
   for (Agent *agent : agents) {
+    if (agent->bird->isDead())
+      continue;
     RenderBird(agent->bird);
   }
 
@@ -154,14 +156,11 @@ void Renderer::RenderAgent1(std::vector<Agent *> agents,
   for (Pipe *pipe : pipes) {
     // I made the width of the pipes twice the size of the bird.
     for (Agent *agent : agents) {
-      Bird* bird = agent->bird;
+      Bird *bird = agent->bird;
       if (bird->getPosX() < pipe->getPosXBot() + PIPE_WIDTH * 0.65) {
         diff = (pipe->getPosYBot() + pipe->getPosYTop() + PIPE_HEIGHT) / 2;
         break;
       }
     }
   }
-
-  Color red = {255, 0, 0, 100};
-  // DrawLine(bird->getPosX(), bird->getPosY(), bird->getPosX(), diff, red);
 }

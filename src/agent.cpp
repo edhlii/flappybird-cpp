@@ -12,7 +12,11 @@ int Agent::getScore() { return this->score; }
 
 void Agent::setType(int type) { this->type = type; }
 
-void Agent::reset() { return; }
+void Agent::reset() {
+  fitness = 0.0;
+  bird->reset();
+  return;
+}
 
 bool Agent::shouldFlap0(std::vector<Pipe *> &pipes) {
   // std::cout << getCenterPos(pipes) << std::endl;
@@ -39,9 +43,8 @@ bool Agent::shouldFlap1(std::vector<Pipe *> &pipes) {
   // Input layer.
   neuralNetwork[0][0] = bird->getVelocity();
   neuralNetwork[0][1] = bird->getPosY() - getCenterPos(pipes);
+  neuralNetwork[0][2] = bird->getPosX() - getNextPipePos(pipes);
 
-  // Here we're getting the direction of the first 2 pipes, that are in front of
-  // the bird.
   // for (Pipe &a : pipes) {
   //   if (x < a.getPosXBot() + 2 * BIRD_SIZE) {
   //     neuralNetwork[0][2] = a.get_direction();
@@ -78,8 +81,7 @@ void Agent::addFitness(double reward) { fitness += reward; }
 // The difference between the bird and the gap.
 float Agent::getCenterPos(std::vector<Pipe *> &pipes) {
   for (Pipe *pipe : pipes) {
-    // I made the width of the pipes twice the size of the bird.
-    if (bird->getPosX() < pipe->getPosXBot() + PIPE_WIDTH * 0.65) {
+    if (bird->getPosX() < pipe->getPosXBot() + PIPE_WIDTH * 0.7) {
       // std::cout << pipe->getPosYBot() << " " << pipe->getPosYTop() +
       // PIPE_HEIGHT
       //           << std::endl;
@@ -93,17 +95,10 @@ void Agent::crossover(
     std::mt19937_64 &i_random_engine,
     const std::vector<std::vector<std::vector<float>>> &i_bird_0_weights,
     const std::vector<std::vector<std::vector<float>>> &i_bird_1_weights) {
-  // I used "Uniform crossover".
-  // I think...
-  // Hold on, lemme do a quick Google search.
-  //(After some time...)
-  // Yeah, I was correct.
-
-  for (unsigned char a = 0; a < weights.size(); a++) {
-    for (unsigned char b = 0; b < weights[a].size(); b++) {
-      for (unsigned char c = 0; c < weights[a][b].size(); c++) {
-        // I didn't wanna use random_engine for this.
-        // It's like using a katana to cut bread. (Ba dum tss)
+  // Uniform crossover
+  for (int a = 0; a < weights.size(); a++) {
+    for (int b = 0; b < weights[a].size(); b++) {
+      for (int c = 0; c < weights[a][b].size(); c++) {
         if (0 == rand() % 2) {
           weights[a][b][c] = i_bird_0_weights[a][b][c];
         } else {
@@ -132,4 +127,17 @@ void Agent::generateWeights(std::mt19937_64 &i_random_engine) {
       }
     }
   }
+}
+
+std::vector<std::vector<std::vector<float>>> Agent::getWeights() {
+  return weights;
+}
+
+float Agent::getNextPipePos(std::vector<Pipe *> &pipes) {
+  for (Pipe *pipe : pipes) {
+    if (bird->getPosX() < pipe->getPosXBot() + PIPE_WIDTH * 0.7) {
+      return pipe->getPosXBot();
+    }
+  }
+  return 0;
 }

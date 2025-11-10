@@ -7,6 +7,7 @@ Bird::Bird() { reset(); }
 void Bird::reset() {
   setPosX(100);
   setPosY(WINDOW_HEIGHT / 2);
+  dead = 0;
 }
 
 double Bird::getPosX() { return posX; }

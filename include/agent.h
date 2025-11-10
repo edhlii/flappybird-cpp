@@ -9,8 +9,8 @@
 
 class Agent {
 private:
-  static const int INPUT_SIZE = 2;
-  static const int HIDDEN_SIZE = 8;
+  static const int INPUT_SIZE = 3;
+  static const int HIDDEN_SIZE = 6;
   static const int OUTPUT_SIZE = 1;
   int type;
   double fitness;
@@ -26,6 +26,8 @@ public:
   double getFitness();
   int getScore();
   float getCenterPos(std::vector<Pipe *> &pipes);
+  float getNextPipePos(std::vector<Pipe *> &pipes);
+  std::vector<std::vector<std::vector<float>>> getWeights();
 
   void setType(int type);
 
