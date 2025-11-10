@@ -36,19 +36,24 @@ void Pipe::setPosYTop(double posY) { this->posYTop = posY; }
 void Pipe::setSpaceWidth(double spaceWidth) { this->spaceWidth = spaceWidth; }
 void Pipe::setDirection(int direction) { this->direction = direction; }
 
+void Pipe::moveHorizontal() {
+  posYBot += direction * PIPE_Y_VELOCITY;
+
+  if (posYBot + PIPE_HEIGHT <= WINDOW_HEIGHT) {
+    posYBot = WINDOW_HEIGHT - PIPE_HEIGHT;
+    direction = 1;
+  }
+  if (posYTop >= -GROUND_HEIGHT - 200) {
+    posYTop = -GROUND_HEIGHT - 200;
+    direction = -1;
+  }
+
+  posYTop = posYBot - spaceWidth - PIPE_HEIGHT;
+}
+
 void Pipe::updatePosition() {
-  // posYBot += direction * PIPE_Y_VELOCITY;
-
-  // if (posYBot + PIPE_HEIGHT <= WINDOW_HEIGHT) {
-  //   posYBot = WINDOW_HEIGHT - PIPE_HEIGHT;
-  //   direction = 1;
-  // }
-  // if (posYTop >= -GROUND_HEIGHT - 200) {
-  //   posYTop = -GROUND_HEIGHT - 200;
-  //   direction = -1;
-  // }
-
-  // posYTop = posYBot - spaceWidth - PIPE_HEIGHT;
+  if (isMoveHorizontal)
+    moveHorizontal();
   posYTop = posYBot - PIPE_GAP - PIPE_HEIGHT;
 
   posXBot -= PIPE_X_VELOCITY;

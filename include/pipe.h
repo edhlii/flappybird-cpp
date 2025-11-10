@@ -3,13 +3,14 @@
 #include "raylib.h"
 
 class Pipe {
- private:
+private:
   double posXBot, posYBot;
   double posXTop, posYTop;
   double spaceWidth;
   int direction = 1;
+  bool isMoveHorizontal = 1;
 
- public:
+public:
   bool scoreIncreased = 0;
   int timer = 1;
   Pipe();
@@ -25,5 +26,6 @@ class Pipe {
   void setPosYTop(double posY);
   void setSpaceWidth(double spaceWidth);
   void setDirection(int direction);
+  void moveHorizontal();
   void updatePosition();
 };

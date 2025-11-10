@@ -34,6 +34,7 @@ public:
   void RunPlayer();
   void RunAgent0();
   void RunAgent1();
+  void Run();
   void Initialize();
   void HandleInput();
   bool IsCollide(Bird *bird);

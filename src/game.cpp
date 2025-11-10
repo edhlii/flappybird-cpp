@@ -10,6 +10,7 @@ Game::Game() {
 }
 
 void Game::Initialize() {
+  aiType = 1;
   pipeManager.reset();
   currentState = PAUSE;
   bird = new Bird();
@@ -62,10 +63,6 @@ Game::~Game() {
 }
 
 void Game::HandleInput() {
-  // if (IsKeyPressed(KEY_ENTER)) {
-  //   std::cout << "Enter" << std::endl;
-  //   currentState = RUN;
-  // }
   if (IsKeyPressed(KEY_SPACE) && currentState == RUN) {
     bird->flap();
   }
@@ -134,85 +131,87 @@ void Game::HandleCollision(Bird *bird) {
 
 void Game::RunPlayer() {
   aiType = -1;
-  while (!WindowShouldClose()) {
-    // Manage game state
+  // Manage game state
 
-    if (currentState == RUN) {
-      HandleInput();
-      bird->updatePosition();
-      pipeManager.updatePipeQueue();
-      pipeManager.updatePipePosition();
-      HandleCollision(bird);
-      // agent.play(pipeManager.getPipeList());
-    } else {
-      HandleInput();
-    }
-
-    BeginDrawing();
-    Renderer::RenderPlayer(bird, pipeManager, currentState, score);
-    // Renderer::RenderAI(&agent, pipeManager, currentState, score);
-    EndDrawing();
+  if (currentState == RUN) {
+    HandleInput();
+    bird->updatePosition();
+    pipeManager.updatePipeQueue();
+    pipeManager.updatePipePosition();
+    HandleCollision(bird);
+  } else {
+    HandleInput();
   }
+
+  BeginDrawing();
+  Renderer::RenderPlayer(bird, pipeManager, currentState, score);
+  EndDrawing();
 }
 
 void Game::RunAgent0() {
   aiType = 0;
-  while (!WindowShouldClose()) {
-    // Manage game state
-    std::vector<Pipe *> pipes = pipeManager.getPipeList();
-    if (currentState == RUN) {
-      HandleInput();
-      agent0->bird->updatePosition();
-      pipeManager.updatePipeQueue();
-      pipeManager.updatePipePosition();
-      HandleCollision(agent0->bird);
-      agent0->playType0(pipes);
-    } else {
-      HandleInput();
-    }
-
-    BeginDrawing();
-    Renderer::RenderAgent0(agent0, pipeManager, currentState, score);
-    EndDrawing();
+  // Manage game state
+  std::vector<Pipe *> pipes = pipeManager.getPipeList();
+  if (currentState == RUN) {
+    HandleInput();
+    agent0->bird->updatePosition();
+    pipeManager.updatePipeQueue();
+    pipeManager.updatePipePosition();
+    HandleCollision(agent0->bird);
+    agent0->playType0(pipes);
+  } else {
+    HandleInput();
   }
+
+  BeginDrawing();
+  Renderer::RenderAgent0(agent0, pipeManager, currentState, score);
+  EndDrawing();
 }
 
 void Game::RunAgent1() {
-  aiType = 1;
-  while (!WindowShouldClose()) {
-    // Manage game state
-    std::vector<Pipe *> pipes = pipeManager.getPipeList();
-    if (currentState == RUN) {
-      // HandleInput();
-      bool isDead = 1;
+  // Manage game state
+  std::vector<Pipe *> pipes = pipeManager.getPipeList();
+  if (currentState == RUN) {
+    // HandleInput();
+    bool isDead = 1;
 
-      for (Agent *agent : agents) {
-        if (agent->bird->isDead())
-          continue;
-        isDead = 0;
-        agent->bird->updatePosition();
-        agent->playType1(pipes);
-        if (IsCollide(agent->bird)) {
-          agent->bird->setDead(true);
-        } else {
-          agent->addFitness(3.6);
-        }
-        // HandleCollision(agent->bird);
+    for (Agent *agent : agents) {
+      if (agent->bird->isDead())
+        continue;
+      isDead = 0;
+      agent->bird->updatePosition();
+      agent->playType1(pipes);
+      if (IsCollide(agent->bird)) {
+        agent->bird->setDead(true);
+      } else {
+        agent->addFitness(3.6);
       }
-
-      pipeManager.updatePipeQueue();
-      pipeManager.updatePipePosition();
-
-      if (isDead) {
-        NewGeneration();
-      }
-
-    } else {
-      HandleInput();
+      // HandleCollision(agent->bird);
     }
 
-    BeginDrawing();
-    Renderer::RenderAgent1(agents, pipeManager, currentState, score);
-    EndDrawing();
+    pipeManager.updatePipeQueue();
+    pipeManager.updatePipePosition();
+
+    if (isDead) {
+      NewGeneration();
+    }
+
+  } else {
+    HandleInput();
+  }
+
+  BeginDrawing();
+  Renderer::RenderAgent1(agents, pipeManager, currentState, score);
+  EndDrawing();
+}
+
+void Game::Run() {
+  while (!WindowShouldClose()) {
+    if (aiType == -1)
+      RunPlayer();
+    else if (aiType == 0)
+      RunAgent0();
+    else if (aiType == 1)
+      RunAgent1();
   }
 }
