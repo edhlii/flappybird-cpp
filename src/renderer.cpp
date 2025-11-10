@@ -53,8 +53,8 @@ void Renderer::RenderPipes(PipeManager &pipeManager) {
   }
 }
 
-void Renderer::RenderGround() {
-  DrawTexture(groundTexture, 0, WINDOW_HEIGHT - GROUND_HEIGHT, WHITE);
+void Renderer::RenderGround(float groundX) {
+  DrawTexture(groundTexture, groundX, WINDOW_HEIGHT - GROUND_HEIGHT, WHITE);
 }
 
 void Renderer::RenderBird(Bird *bird) {
@@ -62,12 +62,14 @@ void Renderer::RenderBird(Bird *bird) {
 }
 
 void Renderer::RenderPlayer(Bird *bird, PipeManager &pipeManager,
-                            int currentState, int score) {
+                            int currentState, int score, float groundX1,
+                            float groundX2) {
   ClearBackground(BLUE);
   DrawTexture(backgroundTexture, 0, 0, WHITE);
   RenderBird(bird);
   RenderPipes(pipeManager);
-  RenderGround();
+  RenderGround(groundX1);
+  RenderGround(groundX2);
 
   // Draw score
   std::string scoreText = "Score: " + std::to_string(score);
@@ -81,26 +83,18 @@ void Renderer::RenderPlayer(Bird *bird, PipeManager &pipeManager,
 
   double diff = 0;
   std::vector<Pipe *> pipes = pipeManager.getPipeList();
-  for (Pipe *pipe : pipes) {
-    // I made the width of the pipes twice the size of the bird.
-    if (bird->getPosX() < pipe->getPosXBot() + 2 * BIRD_WIDTH) {
-      diff = (pipe->getPosYBot() + pipe->getPosYTop() + PIPE_HEIGHT) / 2;
-      break;
-    }
-  }
-
-  Color red = {255, 0, 0, 100};
-  DrawLine(bird->getPosX(), bird->getPosY(), bird->getPosX(), diff, red);
 }
 
 void Renderer::RenderAgent0(Agent *agent, PipeManager &pipeManager,
-                            int currentState, int score) {
+                            int currentState, int score, float groundX1,
+                            float groundX2) {
   Bird *bird = agent->bird;
   ClearBackground(BLUE);
   DrawTexture(backgroundTexture, 0, 0, WHITE);
   RenderBird(bird);
   RenderPipes(pipeManager);
-  RenderGround();
+  RenderGround(groundX1);
+  RenderGround(groundX2);
 
   // Draw score
   std::string scoreText = "Score: " + std::to_string(score);
@@ -128,7 +122,7 @@ void Renderer::RenderAgent0(Agent *agent, PipeManager &pipeManager,
 
 void Renderer::RenderAgent1(std::vector<Agent *> agents,
                             PipeManager &pipeManager, int currentState,
-                            int score) {
+                            int score, float groundX1, float groundX2) {
   ClearBackground(BLUE);
   DrawTexture(backgroundTexture, 0, 0, WHITE);
 
@@ -139,7 +133,8 @@ void Renderer::RenderAgent1(std::vector<Agent *> agents,
   }
 
   RenderPipes(pipeManager);
-  RenderGround();
+  RenderGround(groundX1);
+  RenderGround(groundX2);
 
   // Draw score
   std::string scoreText = "Score: " + std::to_string(score);

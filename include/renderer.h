@@ -23,12 +23,14 @@ public:
   static void UnloadAllTexture();
   static void RenderPipes(PipeManager &pipeManager);
   static void RenderBird(Bird *bird);
-  static void RenderGround();
+  static void RenderGround(float groundX);
   static void RenderPlayer(Bird *bird, PipeManager &pipeManager,
-                           int currentState, int score);
+                           int currentState, int score, float groundX1,
+                           float groundX2);
   static void RenderAgent0(Agent *agent, PipeManager &pipeManager,
-                           int currentState, int score);
+                           int currentState, int score, float groundX1,
+                           float groundX2);
   static void RenderAgent1(std::vector<Agent *> agents,
                            PipeManager &pipeManager, int currentState,
-                           int score);
+                           int score, float groundX1, float groundX2);
 };

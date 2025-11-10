@@ -1,9 +1,9 @@
 #pragma once
+#include <algorithm>
 #include <chrono>
 #include <random>
 #include <string>
 #include <vector>
-#include <algorithm>
 
 #include "agent.h"
 #include "bird.h"
@@ -23,6 +23,7 @@ private:
   PipeManager pipeManager;
   Agent *agent0;
   std::vector<Agent *> agents;
+  float groundX1 = 0, groundX2 = 0;
   double delta, timePassed = 0;
   int currentState;
   int aiType = -1;
@@ -31,6 +32,9 @@ private:
 public:
   Game();
   ~Game();
+
+  void UpdateGround();
+
   void RunPlayer();
   void RunAgent0();
   void RunAgent1();

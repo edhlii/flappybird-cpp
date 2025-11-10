@@ -19,6 +19,7 @@ const int PIPE_SPACING = 300;
 const float JUMP_FORCE = 7.5f;
 const float GROUND_WIDTH = 336 * 2;
 const float GROUND_HEIGHT = 112 * 1.15;
+const float GROUND_VELOCITY = 4.5;
 
 const float PIPE_GAP = 200; // Space between top and bottom pipe
 const float MAX_PIPE_Y = WINDOW_HEIGHT - GROUND_HEIGHT - 50.0;

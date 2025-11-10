@@ -11,6 +11,9 @@ Game::Game() {
 
 void Game::Initialize() {
   aiType = 1;
+  groundX1 = 0;
+  groundX2 = GROUND_WIDTH;
+
   pipeManager.reset();
   currentState = PAUSE;
   bird = new Bird();
@@ -30,6 +33,18 @@ void Game::Initialize() {
   Renderer::LoadAllTexture();
   score = 0;
   std::cout << "Initialized successfully" << std::endl;
+}
+
+void Game::UpdateGround() {
+  groundX2 -= GROUND_VELOCITY;
+  groundX1 -= GROUND_VELOCITY;
+  if (groundX1 + GROUND_WIDTH <= 0) {
+    groundX1 = groundX2 + GROUND_WIDTH;
+  }
+  if (groundX2 + GROUND_WIDTH <= 0) {
+    groundX2 = groundX1 + GROUND_WIDTH;
+  }
+  return;
 }
 
 void Game::NewGeneration() {
@@ -138,13 +153,15 @@ void Game::RunPlayer() {
     bird->updatePosition();
     pipeManager.updatePipeQueue();
     pipeManager.updatePipePosition();
+    UpdateGround();
     HandleCollision(bird);
   } else {
     HandleInput();
   }
 
   BeginDrawing();
-  Renderer::RenderPlayer(bird, pipeManager, currentState, score);
+  Renderer::RenderPlayer(bird, pipeManager, currentState, score, groundX1,
+                         groundX2);
   EndDrawing();
 }
 
@@ -157,6 +174,7 @@ void Game::RunAgent0() {
     agent0->bird->updatePosition();
     pipeManager.updatePipeQueue();
     pipeManager.updatePipePosition();
+    UpdateGround();
     HandleCollision(agent0->bird);
     agent0->playType0(pipes);
   } else {
@@ -164,7 +182,8 @@ void Game::RunAgent0() {
   }
 
   BeginDrawing();
-  Renderer::RenderAgent0(agent0, pipeManager, currentState, score);
+  Renderer::RenderAgent0(agent0, pipeManager, currentState, score, groundX1,
+                         groundX2);
   EndDrawing();
 }
 
@@ -172,7 +191,6 @@ void Game::RunAgent1() {
   // Manage game state
   std::vector<Pipe *> pipes = pipeManager.getPipeList();
   if (currentState == RUN) {
-    // HandleInput();
     bool isDead = 1;
 
     for (Agent *agent : agents) {
@@ -184,13 +202,13 @@ void Game::RunAgent1() {
       if (IsCollide(agent->bird)) {
         agent->bird->setDead(true);
       } else {
-        agent->addFitness(3.6);
+        agent->addFitness(0.1);
       }
-      // HandleCollision(agent->bird);
     }
 
     pipeManager.updatePipeQueue();
     pipeManager.updatePipePosition();
+    UpdateGround();
 
     if (isDead) {
       NewGeneration();
@@ -201,11 +219,13 @@ void Game::RunAgent1() {
   }
 
   BeginDrawing();
-  Renderer::RenderAgent1(agents, pipeManager, currentState, score);
+  Renderer::RenderAgent1(agents, pipeManager, currentState, score, groundX1,
+                         groundX2);
   EndDrawing();
 }
 
 void Game::Run() {
+  // aiType = -1;
   while (!WindowShouldClose()) {
     if (aiType == -1)
       RunPlayer();
