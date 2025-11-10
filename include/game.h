@@ -28,13 +28,14 @@ private:
   int currentState;
   int aiType = -1;
   int score = 0;
+  int maxScore = 0;
 
 public:
   Game();
   ~Game();
 
+  void Menu();
   void UpdateGround();
-
   void RunPlayer();
   void RunAgent0();
   void RunAgent1();
@@ -44,4 +45,5 @@ public:
   bool IsCollide(Bird *bird);
   void HandleCollision(Bird *bird);
   void NewGeneration();
+  void ChooseMode();
 };

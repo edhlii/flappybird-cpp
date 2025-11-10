@@ -62,8 +62,8 @@ void Renderer::RenderBird(Bird *bird) {
 }
 
 void Renderer::RenderPlayer(Bird *bird, PipeManager &pipeManager,
-                            int currentState, int score, float groundX1,
-                            float groundX2) {
+                            int currentState, int score, int maxScore,
+                            float groundX1, float groundX2) {
   ClearBackground(BLUE);
   DrawTexture(backgroundTexture, 0, 0, WHITE);
   RenderBird(bird);
@@ -74,11 +74,17 @@ void Renderer::RenderPlayer(Bird *bird, PipeManager &pipeManager,
   // Draw score
   std::string scoreText = "Score: " + std::to_string(score);
   DrawText(scoreText.c_str(), 0, 0, 40, RED);
+  // Draw max score
+  std::string maxScoreText = "Best Score: " + std::to_string(maxScore);
+  DrawText(maxScoreText.c_str(), 0, 50, 40, RED);
+
   if (currentState == PAUSE) {
     DrawText("Press Enter to fly!", 100, 600, 40, BLUE);
   } else if (currentState == OVER) {
     DrawText("Game Over!", 100, 600, 75, RED);
     DrawText("Press Enter to try again!", 100, 700, 30, RED);
+  } else if (currentState == MENU) {
+    RenderMenu();
   }
 
   double diff = 0;
@@ -86,8 +92,8 @@ void Renderer::RenderPlayer(Bird *bird, PipeManager &pipeManager,
 }
 
 void Renderer::RenderAgent0(Agent *agent, PipeManager &pipeManager,
-                            int currentState, int score, float groundX1,
-                            float groundX2) {
+                            int currentState, int score, int maxScore,
+                            float groundX1, float groundX2) {
   Bird *bird = agent->bird;
   ClearBackground(BLUE);
   DrawTexture(backgroundTexture, 0, 0, WHITE);
@@ -99,11 +105,17 @@ void Renderer::RenderAgent0(Agent *agent, PipeManager &pipeManager,
   // Draw score
   std::string scoreText = "Score: " + std::to_string(score);
   DrawText(scoreText.c_str(), 0, 0, 40, RED);
+  // Draw max score
+  std::string maxScoreText = "Best Score: " + std::to_string(maxScore);
+  DrawText(maxScoreText.c_str(), 0, 50, 40, RED);
+
   if (currentState == PAUSE) {
     DrawText("Press Enter to fly!", 100, 600, 40, BLUE);
   } else if (currentState == OVER) {
     DrawText("Game Over!", 100, 600, 75, RED);
     DrawText("Press Enter to try again!", 100, 700, 30, RED);
+  } else if (currentState == MENU) {
+    RenderMenu();
   }
 
   double diff = 0;
@@ -122,7 +134,8 @@ void Renderer::RenderAgent0(Agent *agent, PipeManager &pipeManager,
 
 void Renderer::RenderAgent1(std::vector<Agent *> agents,
                             PipeManager &pipeManager, int currentState,
-                            int score, float groundX1, float groundX2) {
+                            int score, int maxScore, float groundX1,
+                            float groundX2) {
   ClearBackground(BLUE);
   DrawTexture(backgroundTexture, 0, 0, WHITE);
 
@@ -139,23 +152,22 @@ void Renderer::RenderAgent1(std::vector<Agent *> agents,
   // Draw score
   std::string scoreText = "Score: " + std::to_string(score);
   DrawText(scoreText.c_str(), 0, 0, 40, RED);
+  // Draw max score
+  std::string maxScoreText = "Best Score: " + std::to_string(maxScore);
+  DrawText(maxScoreText.c_str(), 0, 50, 40, RED);
+
   if (currentState == PAUSE) {
     DrawText("Press Enter to fly!", 100, 600, 40, BLUE);
   } else if (currentState == OVER) {
     DrawText("Game Over!", 100, 600, 75, RED);
     DrawText("Press Enter to try again!", 100, 700, 30, RED);
+  } else if (currentState == MENU) {
+    RenderMenu();
   }
+}
 
-  double diff = 0;
-  std::vector<Pipe *> pipes = pipeManager.getPipeList();
-  for (Pipe *pipe : pipes) {
-    // I made the width of the pipes twice the size of the bird.
-    for (Agent *agent : agents) {
-      Bird *bird = agent->bird;
-      if (bird->getPosX() < pipe->getPosXBot() + PIPE_WIDTH * 0.65) {
-        diff = (pipe->getPosYBot() + pipe->getPosYTop() + PIPE_HEIGHT) / 2;
-        break;
-      }
-    }
-  }
+void Renderer::RenderMenu() {
+  DrawText("0: Play", 100, 100, 40, BLUE);
+  DrawText("1: A.I Type 1", 100, 150, 40, BLUE);
+  DrawText("2: A.I Type 2", 100, 200, 40, BLUE);
 }

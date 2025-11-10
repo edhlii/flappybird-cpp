@@ -10,12 +10,12 @@ Game::Game() {
 }
 
 void Game::Initialize() {
-  aiType = 1;
+  aiType = -1;
   groundX1 = 0;
   groundX2 = GROUND_WIDTH;
 
   pipeManager.reset();
-  currentState = PAUSE;
+  currentState = MENU;
   bird = new Bird();
 
   agent0 = new Agent(new Bird(), 0);
@@ -75,6 +75,21 @@ Game::~Game() {
   Renderer::UnloadAllTexture();
   delete bird;
   CloseWindow();
+}
+
+void Game::ChooseMode() {
+  if (IsKeyPressed(KEY_ZERO)) {
+    aiType = -1;
+    currentState = PAUSE;
+  }
+  if (IsKeyPressed(KEY_ONE)) {
+    aiType = 0;
+    currentState = PAUSE;
+  }
+  if (IsKeyPressed(KEY_TWO)) {
+    aiType = 1;
+    currentState = PAUSE;
+  }
 }
 
 void Game::HandleInput() {
@@ -145,7 +160,11 @@ void Game::HandleCollision(Bird *bird) {
 }
 
 void Game::RunPlayer() {
-  aiType = -1;
+
+  BeginDrawing();
+  Renderer::RenderPlayer(bird, pipeManager, currentState, score, maxScore,
+                         groundX1, groundX2);
+  EndDrawing();
   // Manage game state
 
   if (currentState == RUN) {
@@ -158,15 +177,13 @@ void Game::RunPlayer() {
   } else {
     HandleInput();
   }
-
-  BeginDrawing();
-  Renderer::RenderPlayer(bird, pipeManager, currentState, score, groundX1,
-                         groundX2);
-  EndDrawing();
 }
 
 void Game::RunAgent0() {
-  aiType = 0;
+  BeginDrawing();
+  Renderer::RenderAgent0(agent0, pipeManager, currentState, score, maxScore,
+                         groundX1, groundX2);
+  EndDrawing();
   // Manage game state
   std::vector<Pipe *> pipes = pipeManager.getPipeList();
   if (currentState == RUN) {
@@ -180,14 +197,14 @@ void Game::RunAgent0() {
   } else {
     HandleInput();
   }
-
-  BeginDrawing();
-  Renderer::RenderAgent0(agent0, pipeManager, currentState, score, groundX1,
-                         groundX2);
-  EndDrawing();
 }
 
 void Game::RunAgent1() {
+  BeginDrawing();
+  Renderer::RenderAgent1(agents, pipeManager, currentState, score, maxScore,
+                         groundX1, groundX2);
+  EndDrawing();
+
   // Manage game state
   std::vector<Pipe *> pipes = pipeManager.getPipeList();
   if (currentState == RUN) {
@@ -217,16 +234,19 @@ void Game::RunAgent1() {
   } else {
     HandleInput();
   }
+}
 
-  BeginDrawing();
-  Renderer::RenderAgent1(agents, pipeManager, currentState, score, groundX1,
-                         groundX2);
-  EndDrawing();
+void Game::Menu() {
+  ChooseMode();
+  return;
 }
 
 void Game::Run() {
-  // aiType = -1;
   while (!WindowShouldClose()) {
+    maxScore = std::max(maxScore, score);
+    if (currentState == MENU) {
+      Menu();
+    }
     if (aiType == -1)
       RunPlayer();
     else if (aiType == 0)
