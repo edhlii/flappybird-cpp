@@ -45,14 +45,6 @@ bool Agent::shouldFlap1(std::vector<Pipe *> &pipes) {
   neuralNetwork[0][1] = bird->getPosY() - getCenterPos(pipes);
   neuralNetwork[0][2] = bird->getPosX() - getNextPipePos(pipes);
 
-  // for (Pipe &a : pipes) {
-  //   if (x < a.getPosXBot() + 2 * BIRD_SIZE) {
-  //     neuralNetwork[0][2] = a.get_direction();
-
-  //     break;
-  //   }
-  // }
-
   for (int a = 0; a < neuralNetwork.size() - 1; a++) {
     for (int b = 0; b < neuralNetwork[1 + a].size(); b++) {
       for (int c = 0; c < neuralNetwork[a].size(); c++) {
@@ -117,7 +109,6 @@ void Agent::generateWeights(std::mt19937_64 &i_random_engine) {
   weights[0].resize(INPUT_SIZE, std::vector<float>(HIDDEN_SIZE));
   weights[1].resize(HIDDEN_SIZE, std::vector<float>(OUTPUT_SIZE));
 
-  // This is how I structured the vector of weights.
   for (std::vector<std::vector<float>> &layer : weights) {
     for (std::vector<float> &previous_node : layer) {
       for (float &next_node : previous_node) {

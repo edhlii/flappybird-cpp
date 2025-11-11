@@ -16,7 +16,7 @@ const double PIPE_Y_VELOCITY = 1.5;
 const int BIRD_WIDTH = 40 * 1.5;
 const int BIRD_HEIGHT = 35 * 1.5;
 const int PIPE_SPACING = 300;
-const float JUMP_FORCE = 7.5f;
+const float JUMP_FORCE = 8.0f;
 const float GROUND_WIDTH = 336 * 2;
 const float GROUND_HEIGHT = 112 * 1.15;
 const float GROUND_VELOCITY = 4.5;
@@ -30,8 +30,5 @@ const float MIN_PIPE_Y = 50.0 + PIPE_GAP;
 // This means a probability of 1 in 64.
 constexpr unsigned short MUTATION_PROBABILITY = 64;
 constexpr unsigned char POPULATION_SIZE = 50;
-constexpr unsigned char TOTAL_HIDDEN_NODES = 4;
-constexpr unsigned char TOTAL_INPUT_NODES = 3;
-constexpr unsigned char TOTAL_OUTPUT_NODES = 1;
 
 double randomDouble(double a, double b, std::mt19937 &gen);

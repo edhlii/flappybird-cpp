@@ -47,7 +47,6 @@ void Pipe::moveHorizontal() {
     posYTop = -GROUND_HEIGHT - 200;
     direction = -1;
   }
-
   posYTop = posYBot - spaceWidth - PIPE_HEIGHT;
 }
 

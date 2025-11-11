@@ -17,8 +17,10 @@ private:
   static Texture pipeTexture;
   static Texture backgroundTexture;
   static Texture groundTexture;
+  static Sound flapSfx;
 
 public:
+  static void FlapSound();
   static void LoadAllTexture();
   static void UnloadAllTexture();
   static void RenderPipes(PipeManager &pipeManager);

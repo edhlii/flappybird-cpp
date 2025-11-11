@@ -4,6 +4,7 @@ Texture Renderer::birdTexture;
 Texture Renderer::pipeTexture;
 Texture Renderer::backgroundTexture;
 Texture Renderer::groundTexture;
+Sound Renderer::flapSfx;
 
 void Renderer::UnloadAllTexture() {
   UnloadTexture(backgroundTexture);
@@ -12,6 +13,10 @@ void Renderer::UnloadAllTexture() {
 }
 
 void Renderer::LoadAllTexture() {
+  // Load sfx
+  flapSfx = LoadSound("sfx/wing.wav");
+  std::cout << "Loaded sfx succesfully" << std::endl;
+
   Image backgroundImage = LoadImage("game-objects/background-day.png");
   ImageResize(&backgroundImage, WINDOW_WIDTH, WINDOW_HEIGHT);
   backgroundTexture = LoadTextureFromImage(backgroundImage);
@@ -36,6 +41,8 @@ void Renderer::LoadAllTexture() {
 
   std::cout << "All resources loaded successfully" << std::endl;
 }
+
+void Renderer::FlapSound() { PlaySound(flapSfx); }
 
 void Renderer::RenderPipes(PipeManager &pipeManager) {
   std::vector<Pipe *> pipes = pipeManager.getPipeList();

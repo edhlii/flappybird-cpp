@@ -4,6 +4,7 @@
 
 Game::Game() {
   InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "bird");
+  InitAudioDevice();
   SetTargetFPS(60);
   SearchAndSetResourceDir("resources");
   Initialize();
@@ -95,6 +96,7 @@ void Game::ChooseMode() {
 void Game::HandleInput() {
   if (IsKeyPressed(KEY_SPACE) && currentState == RUN) {
     bird->flap();
+    Renderer::FlapSound();
   }
   if (IsKeyPressed(KEY_ENTER)) {
     switch (currentState) {
